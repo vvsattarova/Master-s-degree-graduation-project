@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портрет личности - Анализ с ИИ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>🧠 Построение личностного портрета</h1>
+                    <p class="subtitle">Анализ личности с помощью искусственного интеллекта</p>
+                </div>
+                <div class="user-menu">
+                    <span class="user-info">👤 {{ session.get('user', 'Гость') }}</span>
+                    <a href="/logout" class="btn-logout" onclick="return confirm('Вы уверены, что хотите выйти?')">🚪 Выйти</a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="card" id="analysisCard">
+                <h2>Введите текст для анализа</h2>
+
+                <form id="analysisForm">
+                    <div class="form-group">
+                        <label for="text">Текст для анализа:</label>
+                        <textarea
+                            id="text"
+                            name="text"
+                            rows="8"
+                            placeholder="Введите текст для анализа (минимум 10 слов)..."
+                        ></textarea>
+                        <div class="word-count">
+                            Слов: <span id="wordCount">0</span>
+                            <span class="min-words">(минимум 10)</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Или загрузите файл:</label>
+                        <div class="file-upload">
+                            <input type="file" id="file" name="file" accept=".txt,.doc,.docx,.pdf">
+                            <label for="file" class="file-label">📁 Выберите файл</label>
+                            <span id="fileName"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_info">Информация о пользователе (опционально):</label>
+                        <input
+                            type="text"
+                            id="user_info"
+                            name="user_info"
+                            placeholder="Например: Мужчина, 25 лет, студент"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Тип анализа:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="analysis_type" value="anxiety">
+                                <span>😰 Оценка тревожности</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="analysis_type" value="big5">
+                                <span>🎭 Оценка Big5</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="analysis_type" value="full" checked>
+                                <span>🔍 Общая оценка</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="modelTypeGroup">
+                        <label>Тип модели:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="model_type" value="local" checked>
+                                <span>💻 Локальная модель (быстро)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="model_type" value="cloud">
+                                <span>☁️ Облачная модель (точно)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="cloudModelGroup" style="display:none;">
+                        <label>Выберите облачную модель:</label>
+                        <select id="cloud_model" name="cloud_model" class="model-select">
+                            <option value="">Автоматический выбор</option>
+                        </select>
+                        <button type="button" id="refreshModels" class="btn-refresh" style="margin-top: 10px;">🔄 Обновить список моделей</button>
+                        <div id="modelStatus" style="margin-top: 5px; font-size: 0.9em; color: #666;"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="analyzeBtn">
+                        🔍 Начать анализ
+                    </button>
+                </form>
+            </div>
+
+            <div id="results" class="card" style="display:none;">
+                <h2>Результаты анализа</h2>
+                <div id="loadingIndicator" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>Выполняется анализ...</p>
+                </div>
+                <div id="resultsContent"></div>
+                <button id="newAnalysis" class="btn-secondary" style="margin-top: 20px;">
+                    🔄 Новый анализ
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
